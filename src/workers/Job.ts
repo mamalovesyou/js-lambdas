@@ -15,6 +15,7 @@ export type Job = {
 // Job Result type
 export type JobResult = {
     id: string;
+    script: string;
     result?: string;
     error?: string;
 

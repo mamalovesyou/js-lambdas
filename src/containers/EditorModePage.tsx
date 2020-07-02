@@ -45,14 +45,7 @@ const connector = connect(mapState, mapDispatch)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-type Props = PropsFromRedux & {
-    inProgress: boolean;
-    result?: string;
-    error?: string;
-    submitScript: (script: string) => void;
-}
-
-const EditorModePage = ({error, result, inProgress, submitScript}: Props) => {
+const EditorModePage = ({error, result, inProgress, submitScript}: PropsFromRedux) => {
 
     const classes = useStyles();
     const [code, setCode] = React.useState(initialCode)

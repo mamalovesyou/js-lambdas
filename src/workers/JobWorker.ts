@@ -49,7 +49,11 @@ export class JobWorker {
         const instance = this;
         return (event: MessageEvent) => {
             if (instance.job && event.data && event.data.type === "result") {
-                let result = { result: event.data.result, id: instance.job.id }
+                const result = { 
+                    result: event.data.result, 
+                    id: instance.job.id, 
+                    script: instance.job.script 
+                }
                 // Call onResult callback of the task
                 instance.job.onResult(result);
                 // Tell the pool I am free
@@ -62,7 +66,11 @@ export class JobWorker {
         const instance = this;
         return (event: ErrorEvent) => {
             if (instance.job && event.message) {
-                let result = { error: event.message, id: instance.job.id }
+                const result = { 
+                    error: event.message, 
+                    id: instance.job.id, 
+                    script: instance.job.script 
+                }
                 // Call onResult callback of the task
                 instance.job.onResult(result);
                 // Tell the pool I am free

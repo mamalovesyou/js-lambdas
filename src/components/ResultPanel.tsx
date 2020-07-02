@@ -7,7 +7,7 @@ import Panel from './Panel';
 const useStyles = makeStyles((theme: Theme) => ({
     panelContent: {
         padding: theme.spacing(2),
-        minHeight: '150px'
+        minHeight: '152px'
     },
     error: {
         color: red[500]
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
     result?: string;
     error?: string;
-    inProgress: boolean;
+    inProgress?: boolean;
 }
 
 export const ResultPanel = ({ result, error, inProgress }: Props) => {
