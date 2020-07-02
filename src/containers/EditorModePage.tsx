@@ -6,7 +6,7 @@ import AppStateType from '../stores/appState';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PlayIcon from '@material-ui/icons/PlayArrow';
-import Page from './Page';
+import Page from '../components/Page';
 import ResultPanel from '../components/ResultPanel';
 
 // Ace editor

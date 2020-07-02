@@ -20,9 +20,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type PageProps = {
-    children: React.ReactNode;
-    subHeader: React.ReactNode;
-    title: string;
+    children?: React.ReactNode;
+    subHeader?: React.ReactNode;
+    title?: string;
 }
 
 const Page = ({title, children, subHeader}: PageProps) => {
