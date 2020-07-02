@@ -1,12 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { Provider } from 'react-redux';
+import { Route, Switch } from 'react-router';
+import { ConnectedRouter } from 'connected-react-router';
+import configureStore, { history } from './stores/configureStore';
 import * as serviceWorker from './serviceWorker';
+
+import './index.css';
+import App from './containers/App';
+
+
+const store = configureStore();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <ConnectedRouter history={history}> { /* place ConnectedRouter under Provider */ }
+        <Switch>
+          <Route path="/" component={App}></Route>
+        </Switch>
+      </ConnectedRouter>
+    </Provider>,
   </React.StrictMode>,
   document.getElementById('root')
 );

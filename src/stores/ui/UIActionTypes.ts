@@ -1,0 +1,3 @@
+
+export const OPEN_MENU_DRAWER = 'OPEN_MENU_DRAWER';
+export const CLOSE_MENU_DRAWER = 'CLOSE_MENU_DRAWER';
