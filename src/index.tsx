@@ -10,7 +10,7 @@ import './index.css';
 import App from './containers/App';
 
 
-const store = configureStore();
+export const store = configureStore();
 
 ReactDOM.render(
   <React.StrictMode>
