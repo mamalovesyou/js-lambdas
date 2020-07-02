@@ -1,25 +1,29 @@
 import React from 'react';
+import { Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import AppStateType from '../stores/appState';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import Page from './Page';
-import Panel from '../components/Panel';
+import ResultPanel from '../components/ResultPanel';
 
 // Ace editor
 import AceEditor from 'react-ace';
 import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
-import { Typography, Container } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+
+// Redux actions
+import {submitScript} from '../stores/jobs/JobsActions';
+import { JobResult } from '../workers/Job';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
     button: {
         margin: theme.spacing(2, 0),
-    },
-    panelContent: {
-        padding: theme.spacing(2)
     }
 }));
 
@@ -27,18 +31,42 @@ const initialCode = `function(){
     return [1,2,3].reduce((a,b) => a + b)
 };`;
 
+const mapState = (state: AppStateType) => ({
+    inProgress: state.jobs.latest ? state.jobs.latest.inProgress : false,
+    result: state.jobs.latest ? state.jobs.latest.result : undefined,
+    error: state.jobs.latest ? state.jobs.latest.error : undefined
+});
 
-const EditorModePage = () => {
+const mapDispatch = (dispatch: Dispatch) => ({
+    submitScript: (script: string) => dispatch(submitScript(script))
+});
+
+const connector = connect(mapState, mapDispatch)
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux & {
+    inProgress: boolean;
+    result?: string;
+    error?: string;
+    submitScript: (script: string) => void;
+}
+
+const EditorModePage = ({error, result, inProgress, submitScript}: Props) => {
 
     const classes = useStyles();
     const [code, setCode] = React.useState(initialCode)
+
+    const handleExecuteClick = () => {
+        submitScript(code);
+    }
 
     return (
         <Page
             title="Editor Mode"
             subHeader={
                 <Button
-                    onClick={() => console.log("execute")}
+                    onClick={handleExecuteClick}
                     variant="contained"
                     className={classes.button}
                     startIcon={<PlayIcon />}
@@ -67,13 +95,11 @@ const EditorModePage = () => {
                         }} />
                 </Grid>
                 <Grid item xs={6}>
-                    <Panel header={"Result"} type="success">
-                        <div className={classes.panelContent}><Typography>Result</Typography></div>
-                    </Panel>
+                    <ResultPanel inProgress={inProgress} result={result} error={error}></ResultPanel>
                 </Grid>
             </Grid>
         </Page>
     );
 }
 
-export default EditorModePage;
+export default connector(EditorModePage);

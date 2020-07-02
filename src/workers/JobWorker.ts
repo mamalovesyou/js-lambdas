@@ -24,8 +24,8 @@ export class JobWorker {
         if (job.script) {
             const scriptUrl = this.prepare(job.script);
             this._worker = new Worker(scriptUrl);
-            this._worker.onmessage = this.createResultCallback;
-            this._worker.onerror = this.createErrorCallback;
+            this._worker.onmessage = this.createResultCallback();
+            this._worker.onerror = this.createErrorCallback();
         }
 
     }
@@ -48,11 +48,9 @@ export class JobWorker {
     createResultCallback() {
         const instance = this;
         return (event: MessageEvent) => {
-            if (instance.job && event.data) {
-                let result = { result: event.data, jobId: instance.job.id }
-                result.jobId = instance.job.id;
+            if (instance.job && event.data && event.data.type === "result") {
+                let result = { result: event.data.result, id: instance.job.id }
                 // Call onResult callback of the task
-                console.log("before task callback: " + result);
                 instance.job.onResult(result);
                 // Tell the pool I am free
                 instance.free();
@@ -64,10 +62,8 @@ export class JobWorker {
         const instance = this;
         return (event: ErrorEvent) => {
             if (instance.job && event.message) {
-                let result = { error: event.message, jobId: instance.job.id }
-                result.jobId = instance.job.id;
+                let result = { error: event.message, id: instance.job.id }
                 // Call onResult callback of the task
-                console.log("before task callback: " + result);
                 instance.job.onResult(result);
                 // Tell the pool I am free
                 instance.free();

@@ -34,7 +34,6 @@ type PanelProps = {
 
 export const Panel = ({ type, header, subHeader, children }: PanelProps) => {
 
-    console.log(type)
     const classes = useStyles();
 
     return (

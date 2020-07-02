@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { openMenuDrawer, closeMenuDrawer } from '../stores/ui/UIActions';
 import { appRoutes } from '../routes';
-import { AppStateType } from '../stores/appState';
+import AppStateType from '../stores/appState';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
