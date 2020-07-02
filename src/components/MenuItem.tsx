@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
 
     },
@@ -20,9 +20,9 @@ type MenuItemProps = {
     children: React.ReactNode;
     text: string;
     to: string;
-  }
+}
 
-const MenuItem = ({ children, text, to}: MenuItemProps) => {
+const MenuItem = ({ children, text, to }: MenuItemProps) => {
 
     const classes = useStyles();
 
@@ -36,5 +36,5 @@ const MenuItem = ({ children, text, to}: MenuItemProps) => {
         </React.Fragment>
     )
 }
-        
+
 export default MenuItem;
