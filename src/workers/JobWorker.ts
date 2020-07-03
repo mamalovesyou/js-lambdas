@@ -1,5 +1,5 @@
 import { WorkerPool } from "./WorkerPool";
-import { Job } from './Job';
+import { Job, JobResult } from './Job';
 import { WorkerScriptBuilder, GetBlobUrl } from "./WorkerScript";
 
 // TaskWorker is a wrapper that create a WebWorker to run a script
@@ -10,18 +10,23 @@ export class JobWorker {
 
     _pool: WorkerPool;
     _worker: Worker | null;
-
+    _result: JobResult | null;
     job: Job | null;
 
     constructor(pool: WorkerPool) {
         this._pool = pool;
         this.job = null;
         this._worker = null;
+        this._result = null;
     }
 
     run(job: Job) {
         this.job = job;
-        if (job.script) {
+        if (job.script && this._pool) {
+
+            // Increment number of running worker on the pool
+            this._pool.running++;
+
             const scriptUrl = this.prepare(job.script);
             this._worker = new Worker(scriptUrl);
             this._worker.onmessage = this.createResultCallback();
@@ -37,27 +42,38 @@ export class JobWorker {
         return url
     }
 
-    // Remove the job for this task worker
-    // Tell the pool I am free
-    free() {
-        this.job = null;
+
+   // Send result and tell the pool I am free
+   // Clear the job for this task worker
+    sendAndFree(result: string) {
         this._worker ? this._worker.terminate() : console.log("Failed to terminate worker (null reference");
+        this._pool.running--;
+        this.sendResult(result);
         this._pool.freeJobWorker(this);
     }
+
+    // Send the result for a job and clear it
+    sendResult(data: string) {
+        if (this.job) {
+            const result = { 
+                result: data, 
+                id: this.job.id, 
+                script: this.job.script 
+            }
+            this.job.onResult(result);
+        } else {
+            console.log("Cannot send result, job is ", this.job)
+        }
+        this.job = null;
+    }
+
 
     createResultCallback() {
         const instance = this;
         return (event: MessageEvent) => {
             if (instance.job && event.data && event.data.type === "result") {
-                const result = { 
-                    result: event.data.result, 
-                    id: instance.job.id, 
-                    script: instance.job.script 
-                }
-                // Call onResult callback of the task
-                instance.job.onResult(result);
-                // Tell the pool I am free
-                instance.free();
+                // Send result and tell the pool I am free
+                instance.sendAndFree(event.data.result);
             }
         }
     }
@@ -66,15 +82,8 @@ export class JobWorker {
         const instance = this;
         return (event: ErrorEvent) => {
             if (instance.job && event.message) {
-                const result = { 
-                    error: event.message, 
-                    id: instance.job.id, 
-                    script: instance.job.script 
-                }
-                // Call onResult callback of the task
-                instance.job.onResult(result);
-                // Tell the pool I am free
-                instance.free();
+                // Send result and tell the pool I am free
+                instance.sendAndFree(event.message);
             }
         }
     }

@@ -15,11 +15,13 @@ export class WorkerPool {
     jobQueue: Job[];
     workerQueue: JobWorker[];
     poolSize: number;
+    running: number;
     
     constructor(size: number) {
         this.jobQueue = [];
         this.workerQueue = [];
         this.poolSize = size;
+        this.running = 0;
 
         // Create workers
         this.init();
@@ -61,9 +63,9 @@ export class WorkerPool {
     // Return true if 1 or more worker are not done yet
     getStats(): WorkerPoolStats {
         return {
-            isBusy: (this.workerQueue.length !== this.poolSize),
+            isBusy: (this.running > 0),
             waitingJobs: this.jobQueue.length,
-            running: this.poolSize - this.workerQueue.length
+            running: this.running
         }
     }
 }

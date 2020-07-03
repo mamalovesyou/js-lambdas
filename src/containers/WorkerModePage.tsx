@@ -51,10 +51,9 @@ const WorkerModePage = ({ pool, history, getStatus }: PropsFromRedux) => {
 
     const classes = useStyles();
 
+    // Deprecated cause fully handle by effects + workerpool
     // Refresh pool status every 5 sec
-    // Handled also with effects though
-    useInterval(() => getStatus(), 3000);
-
+    // useInterval(() => getStatus(), 3000);
 
 
     return (
