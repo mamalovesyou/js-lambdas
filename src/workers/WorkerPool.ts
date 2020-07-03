@@ -3,6 +3,7 @@
 
 import { JobWorker } from './JobWorker';
 import { Job, WorkerPoolStats } from '.';
+
 /**
  * A WorkerPool to manage JobWorkers
  * @param {Number} [size]   Pool size (max number of workers)
