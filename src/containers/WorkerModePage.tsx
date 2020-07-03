@@ -17,6 +17,8 @@ import { getPoolStatus } from '../stores/jobs/JobsActions';
 
 // Ace editor
 import AceEditor from 'react-ace';
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-github";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

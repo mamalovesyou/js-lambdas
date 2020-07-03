@@ -11,6 +11,8 @@ import ResultPanel from '../components/ResultPanel';
 
 // Ace editor
 import AceEditor from 'react-ace';
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/theme-monokai";
 
 // Redux actions
 import {submitScript} from '../stores/jobs/JobsActions';
