@@ -65,7 +65,8 @@ export class WorkerPool {
         return {
             isBusy: (this.running > 0),
             waitingJobs: this.jobQueue.length,
-            running: this.running
+            running: this.running,
+            size: this.poolSize
         }
     }
 }

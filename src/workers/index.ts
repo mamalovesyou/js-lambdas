@@ -30,6 +30,7 @@ export interface WorkerPoolStats {
     isBusy: boolean;
     waitingJobs: number;
     running: number;
+    size: number;
 }
 
 

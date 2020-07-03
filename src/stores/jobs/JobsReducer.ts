@@ -15,7 +15,8 @@ const initialJobsState: JobsStateType = {
     pool: {
         isBusy: false,
         waitingJobs: 0,
-        running: 0
+        running: 0,
+        size: 0
     }
 }
 

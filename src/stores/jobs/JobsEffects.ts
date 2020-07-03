@@ -1,6 +1,7 @@
 import { all, takeEvery, put, fork } from 'redux-saga/effects';
 import * as ActionTypes from './JobsActionTypes';
 import * as Actions from './JobsActions';
+import * as PoolActions from '../pool/PoolActions';
 import { store, pool } from '../../index';
 
 import { createJob } from '../../workers';
@@ -15,7 +16,7 @@ export function* onJobSubmit() {
             // Set Latest job
             put(Actions.setLatestJob(job)),
             // Update pool status
-            put(Actions.getPoolStatus())
+            put(PoolActions.getPoolStatus())
         ]);
 
         // Add job to the pool
@@ -27,24 +28,13 @@ export function* onJobSubmit() {
 export function* onSetJobResult() {
     yield takeEvery(ActionTypes.SET_JOB_RESULT, function* ({ payload }:  ActionTypes.SubmitScriptInterface) {
         // Update pool status
-        yield put(Actions.getPoolStatus())
-    });
-}
-
-// Called when worker pool status is asked
-export function* onGetPoolStatus() {
-    yield takeEvery(ActionTypes.GET_POOL_STATUS, function* () {
-        const status = pool.getStats();
-        // Update worker pool status
-        yield put(Actions.setPoolStatus(status))
-
+        yield put(PoolActions.getPoolStatus())
     });
 }
 
 export const JobsEffect = [
     fork(onJobSubmit),
-    fork(onSetJobResult),
-    fork(onGetPoolStatus)
+    fork(onSetJobResult)
 ];
 
 export default JobsEffect

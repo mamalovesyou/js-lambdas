@@ -1,10 +1,12 @@
 import { all } from 'redux-saga/effects';
-import JobsEffect from './jobs/JobsEffects';
+import JobsEffects from './jobs/JobsEffects';
+import PoolEffects from './pool/PoolEffects';
 
 export default function configureEffects() {
     return function* rootSaga() {
         yield all([
-            ...JobsEffect,
+            ...JobsEffects,
+            ...PoolEffects
         ]);
     }
 }
