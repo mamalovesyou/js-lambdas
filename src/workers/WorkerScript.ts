@@ -3,7 +3,6 @@
 // Making code as promise ensure correct order execution (async code for example)
 export const WrappScriptForWorker = (script: string): string => {
     const wrapped = `const task = ${script}
-    console.log(task);
     const taskPromise = () => new Promise(resolve => resolve(task()));
     taskPromise().then(result => {
         console.log(result);

@@ -1,5 +1,4 @@
-import { JobResult, Job } from '../../workers/Job';
-import { WorkerPoolStats } from '../../workers/WorkerPool';
+import { JobResult, Job, WorkerPoolStats } from '../../workers';
 
 export const SUBMIT_SCRIPT = 'SUBMIT_SCRIPT';
 export const SET_LATEST_JOB = 'SET_LATEST_JOB';

@@ -1,6 +1,5 @@
 import * as ActionTypes from './JobsActionTypes';
-import { Job, JobResult } from '../../workers/Job';
-import { WorkerPoolStats } from '../../workers/WorkerPool';
+import { Job, JobResult, WorkerPoolStats } from '../../workers';
 
 export const submitScript = (script: string): ActionTypes.JobsActionType => ({
     type: ActionTypes.SUBMIT_SCRIPT,

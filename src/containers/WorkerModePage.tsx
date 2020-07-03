@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppStateType from '../stores/appState';
-import { JobResult } from '../workers/Job';
+import { JobResult } from '../workers';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -12,7 +12,8 @@ import Panel from '../components/Panel';
 import ResultPanel from '../components/ResultPanel';
 import PoolStatus from '../components/PoolStatus';
 import { getPoolStatus } from '../stores/jobs/JobsActions';
-import { useInterval } from '../hooks/useInterval';
+
+// import { useInterval } from '../hooks/useInterval'; Not using interval anymore
 
 // Ace editor
 import AceEditor from 'react-ace';

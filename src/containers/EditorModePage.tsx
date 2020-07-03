@@ -14,11 +14,9 @@ import AceEditor from 'react-ace';
 import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
-import { Typography } from '@material-ui/core';
 
 // Redux actions
 import {submitScript} from '../stores/jobs/JobsActions';
-import { JobResult } from '../workers/Job';
 
 
 const useStyles = makeStyles((theme: Theme) => ({

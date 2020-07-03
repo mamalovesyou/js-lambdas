@@ -3,8 +3,7 @@ import * as ActionTypes from './JobsActionTypes';
 import * as Actions from './JobsActions';
 import { store, pool } from '../../index';
 
-import { WorkerPool } from '../../workers/WorkerPool';
-import { createJob } from '../../workers/Job';
+import { createJob } from '../../workers';
 
 // Called when user submit a script
 export function* onJobSubmit() {

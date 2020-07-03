@@ -8,12 +8,12 @@ import * as serviceWorker from './serviceWorker';
 
 import './index.css';
 import App from './containers/App';
-import { WorkerPool } from './workers/WorkerPool';
+import { createWorkerPool } from './workers';
 
 
 
 // Create our pool with 4 maximum worker;
-export const pool = new WorkerPool(4);
+export const pool = createWorkerPool(4);
 
 
 export const store = configureStore();

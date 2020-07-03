@@ -1,7 +1,7 @@
 import React from 'react';
-import { WorkerPoolStats } from '../workers/WorkerPool';
 import Typography from '@material-ui/core/Typography';
 import RuntimeIcon from '../components/RuntimeIcon';
+import { WorkerPoolStats } from '../workers';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
     pool: WorkerPoolStats

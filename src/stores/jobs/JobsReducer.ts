@@ -1,6 +1,5 @@
 import * as ActionType from './JobsActionTypes';
-import { JobResult } from '../../workers/Job';
-import { WorkerPoolStats } from '../../workers/WorkerPool';
+import { JobResult, WorkerPoolStats } from '../../workers';
 
 export type JobsStateType = {
     history: JobResult[];

@@ -2,14 +2,12 @@
 
 
 import { JobWorker } from './JobWorker';
-import { Job } from './Job';
-
-export type WorkerPoolStats = {
-    isBusy: boolean;
-    waitingJobs: number;
-    running: number;
-}
-
+import { Job, WorkerPoolStats } from '.';
+/**
+ * A WorkerPool to manage JobWorkers
+ * @param {Number} [size]   Pool size (max number of workers)
+ * @constructor
+ */
 export class WorkerPool {
 
     jobQueue: Job[];

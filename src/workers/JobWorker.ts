@@ -1,16 +1,25 @@
 import { WorkerPool } from "./WorkerPool";
-import { Job, JobResult } from './Job';
 import { WorkerScriptBuilder, GetBlobUrl } from "./WorkerScript";
+import { Job, JobResult } from '.';
+/*
+The Web Worker provides an API postMessage() to exchange 
+message between main and web worker thread. But we need a better api 
+to communicate with our WorkerPool. */
 
-// TaskWorker is a wrapper that create a WebWorker to run a script
-// Necessary so we can deal easily with our queue in the WorkerPool
-
-
+/**
+ * JobWorker is a representation of a Worker responsible for 
+ * starting and terminating the worker and execute the callback 
+ * of our Job when the has return a result and is properly terminated
+ * 
+ * @param {WorkerPool} [pool]   parent WorkerPool
+ * @constructor
+ */
 export class JobWorker {
 
     _pool: WorkerPool;
     _worker: Worker | null;
     _result: JobResult | null;
+
     job: Job | null;
 
     constructor(pool: WorkerPool) {
