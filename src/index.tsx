@@ -13,7 +13,7 @@ import { createWorkerPool } from './workers';
 
 
 // Create our pool with 4 maximum worker;
-export const pool = createWorkerPool(4);
+const pool = createWorkerPool(4);
 
 
 export const store = configureStore();

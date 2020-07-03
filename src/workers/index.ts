@@ -2,7 +2,11 @@ import { WorkerPool } from './WorkerPool';
 import * as JobCreator from './Job';
 
 export const createWorkerPool = (poolSize: number, minPoolSize: number = 1): WorkerPool => {
-    return new WorkerPool(poolSize, minPoolSize)
+    // Store our worker pool in window (better for units tests)
+    if (window.workerPool) return window.workerPool;
+    const pool = new WorkerPool(poolSize, minPoolSize)
+    window.workerPool = pool;
+    return window.workerPool;
 }
 
 export const createJob = JobCreator.createJob;
@@ -31,6 +35,10 @@ export interface WorkerPoolStats {
     waitingJobs: number;
     running: number;
     size: number;
+}
+
+declare global {
+    interface Window { workerPool?: WorkerPool; }
 }
 
 

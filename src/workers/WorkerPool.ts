@@ -2,7 +2,7 @@
 
 
 import { JobWorker } from './JobWorker';
-import { Job, WorkerPoolStats } from '.';
+import { Job, WorkerPoolStats,  } from '.';
 
 /**
  * A WorkerPool to manage JobWorkers
@@ -17,11 +17,11 @@ export class WorkerPool {
     minPoolSize: number;
     running: number;
     
-    constructor(size: number, minSize: number) {
+    constructor(size: number, minSize: number = 1) {
         this.jobQueue = [];
         this.workerQueue = [];
-        this.poolSize = size;
         this.minPoolSize = minSize;
+        (size < minSize) ? this.poolSize = minSize : this.poolSize = size;
         this.running = 0;
 
         // Create workers
@@ -29,10 +29,14 @@ export class WorkerPool {
     }
 
     // Initialize the pool with a certain number of worker
-    init() {
+    private init() {
         for (var i = 0; i < this.poolSize; i++) {
             this.workerQueue.push(new JobWorker(this));
         }
+    }
+
+    public static getWorkerPoolInstance(): WorkerPool | undefined {
+        return window.workerPool;
     }
 
     resize(newSize: number) {

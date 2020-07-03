@@ -2,25 +2,29 @@ import { all, takeEvery, put, fork } from 'redux-saga/effects';
 import * as ActionTypes from './JobsActionTypes';
 import * as Actions from './JobsActions';
 import * as PoolActions from '../pool/PoolActions';
-import { store, pool } from '../../index';
-
+import { store } from '../../index';
 import { createJob } from '../../workers';
+import { WorkerPool } from '../../workers/WorkerPool';
 
 // Called when user submit a script
 export function* onJobSubmit() {
     yield takeEvery(ActionTypes.SUBMIT_SCRIPT, function* ({ payload }:  ActionTypes.SubmitScriptInterface) {
 
-        const job = createJob(payload.script, (result) => store.dispatch(Actions.setJobResult(result)));
-
-        yield all([
-            // Set Latest job
-            put(Actions.setLatestJob(job)),
-            // Update pool status
-            put(PoolActions.getPoolStatus())
-        ]);
-
-        // Add job to the pool
-        pool.addJob(job);
+        // Check if pool instance is available
+        const pool = WorkerPool.getWorkerPoolInstance();
+        if (pool) {
+            const job = createJob(payload.script, (result) => store.dispatch(Actions.setJobResult(result)));
+            // Add job to the pool
+            pool.addJob(job);
+            yield all([
+                // Set Latest job
+                put(Actions.setLatestJob(job)),
+                // Update pool status
+                put(PoolActions.getPoolStatus())
+            ]);
+        } else {
+            throw new Error("Error: Cannot resize pool. workerPool is not defined in window scope")
+        }
     });
 }
 
