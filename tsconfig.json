@@ -4,7 +4,6 @@
     "jsx": "react",
     "module": "esnext",
     "moduleResolution": "Node",
-    "baseUrl": "./",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,7 +17,9 @@
       "dom.iterable",
       "esnext"
     ],
-    "noEmit": true
+    "noEmit": true,
+    "sourceMap": true,
+    "baseUrl": "./"
   },
   "include": [
     "src/**/*"

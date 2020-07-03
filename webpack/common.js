@@ -1,7 +1,6 @@
 // shared config (dev and prod)
 const { resolve } = require('path');
 var nodeExternals = require('webpack-node-externals');
-const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -10,14 +9,32 @@ module.exports = {
     target: 'node', // in order to ignore built-in modules like path, fs, etc. 
     externals: [nodeExternals()], // in order to ignore all modules in node_modules folder 
     resolve: {
+        modules: ['node_modules', 'src'],
+        alias: {
+            Workers: resolve(__dirname, "../src/workers"),
+            Containers: resolve(__dirname, "../src/containers"),
+            Component: resolve(__dirname, "../src/components"),
+            stores: resolve(__dirname, "../src/stores"),
+            utils: resolve(__dirname, "../src/utils"),
+            routes: resolve(__dirname, "../src/routes"),
+            hooks: resolve(__dirname, "../src/hooks"),
+        },
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
-    context: resolve(__dirname, '../src'),
+    output: {
+        filename: 'js/bundle.[hash].min.js',
+        path: resolve(__dirname, '../dist'),
+        publicPath: '/',
+    },
     module: {
         rules: [
             {
+                test: /\.jsx?$/,
+                use: ["babel-loader"],
+            },
+            {
                 test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader'
+                use: ["awesome-typescript-loader"]
             },
             {
                 test: /\.css$/,
@@ -30,7 +47,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new CheckerPlugin(),
         new HtmlWebpackPlugin({
             inject: true,
             template: resolve(__dirname, '../public', 'index.html'),
@@ -50,11 +66,11 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 // relative path is from src
-                { from: '../public/favicon.ico', to: '../dist' },
-                { from: '../public/manifest.json', to: '../dist' },
-                { from: '../public/robots.txt', to: '../dist' },
-                { from: '../public/logo192.png', to: '../dist' },
-                { from: '../public/logo192.png', to: '../dist' }
+                { from: resolve(__dirname, '../public/favicon.ico'), to: resolve(__dirname, '../dist') },
+                { from: resolve(__dirname, '../public/manifest.json'), to: resolve(__dirname, '../dist') },
+                { from: resolve(__dirname, '../public/robots.txt'), to: resolve(__dirname, '../dist') },
+                { from: resolve(__dirname, '../public/logo192.png'), to: resolve(__dirname, '../dist') },
+                { from: resolve(__dirname, '../public/logo192.png'), to: resolve(__dirname, '../dist') }
             ]
         })
     ],

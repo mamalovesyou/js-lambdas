@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import RuntimeIcon from '../components/RuntimeIcon';
+import RuntimeIcon from './RuntimeIcon';
 import { WorkerPoolStats } from '../workers';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
