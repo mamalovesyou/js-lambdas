@@ -4,6 +4,12 @@
 import { JobWorker } from './JobWorker';
 import { Job } from './Job';
 
+export type WorkerPoolStats = {
+    isBusy: boolean;
+    waitingJobs: number;
+    running: number;
+}
+
 export class WorkerPool {
 
     jobQueue: Job[];
@@ -37,7 +43,6 @@ export class WorkerPool {
             // no free workers so we need to queue the job
             this.jobQueue.push(job);
         }
-        console.log("Queue size: ", this.jobQueue.length)
     }
 
     freeJobWorker(worker: JobWorker) {
@@ -50,6 +55,15 @@ export class WorkerPool {
         } else {
             // No job waiting to be executed so put the worker back in worker queue
             this.workerQueue.push(worker);
+        }
+    }
+
+    // Return true if 1 or more worker are not done yet
+    getStats(): WorkerPoolStats {
+        return {
+            isBusy: (this.workerQueue.length !== this.poolSize),
+            waitingJobs: this.jobQueue.length,
+            running: this.poolSize - this.workerQueue.length
         }
     }
 }

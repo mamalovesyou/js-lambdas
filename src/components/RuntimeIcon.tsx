@@ -22,18 +22,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 }));
 
-type RuntimeIconProps = {
+type RuntimeIconProps = React.HTMLAttributes<HTMLDivElement> & {
     type?: string;
 }
 
-export const RuntimeIcon = ({ type }: RuntimeIconProps) => {
+export const RuntimeIcon = ({ className, type }: RuntimeIconProps) => {
 
     const classes = useStyles();
     const getIcon = () => {
 
         switch (type) {
             case "progress":
-                return <CircularProgress className={classes.icon}
+                return <CircularProgress className={clsx(classes.icon, className)}
                     disableShrink
                     variant="indeterminate"
                     size={25}
@@ -42,11 +42,11 @@ export const RuntimeIcon = ({ type }: RuntimeIconProps) => {
                         circle: classes.circle,
                     }}></CircularProgress>
             case "error":
-                return <ErrorIcon className={clsx(classes.icon, classes.errorIcon)}></ErrorIcon>
+                return <ErrorIcon className={clsx(classes.icon, classes.errorIcon, className)}></ErrorIcon>
             case "success":
-                return <CheckCircleIcon className={clsx(classes.icon, classes.successIcon)}></CheckCircleIcon>
+                return <CheckCircleIcon className={clsx(classes.icon, classes.successIcon, className)}></CheckCircleIcon>
             default:
-                return <></>
+                return <div className={className}></div>
         }
     }
 
