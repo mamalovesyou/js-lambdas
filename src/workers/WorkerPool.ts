@@ -14,12 +14,14 @@ export class WorkerPool {
     jobQueue: Job[];
     workerQueue: JobWorker[];
     poolSize: number;
+    minPoolSize: number;
     running: number;
     
-    constructor(size: number) {
+    constructor(size: number, minSize: number) {
         this.jobQueue = [];
         this.workerQueue = [];
         this.poolSize = size;
+        this.minPoolSize = minSize;
         this.running = 0;
 
         // Create workers
@@ -31,6 +33,31 @@ export class WorkerPool {
         for (var i = 0; i < this.poolSize; i++) {
             this.workerQueue.push(new JobWorker(this));
         }
+    }
+
+    resize(newSize: number) {
+        // Check that new size is valid
+        if (newSize < this.minPoolSize || newSize === this.poolSize) return
+
+        if (this.running < newSize && this.poolSize < newSize) {
+            for (var i = 0; i < (newSize-this.poolSize); i++) {
+                const worker = new JobWorker(this)
+                if(this.hasWaithingJobs()) {
+                    // If any job then execute immediatly
+                    const job = this.jobQueue.shift();
+                    job ? worker.run(job) : console.log("Try to run an undefined job.");
+                } else {
+                    this.workerQueue.push(worker);
+                }
+            }
+        } else {
+            this.poolSize = newSize;
+            console.log("down size pool: ", this.poolSize)
+        }
+    }
+
+    hasWaithingJobs(): boolean {
+        return this.jobQueue.length > 0;
     }
 
     addJob(job: Job) {
@@ -56,7 +83,14 @@ export class WorkerPool {
             job ? worker.run(job) : console.log("Try to run an undefined job.");
         } else {
             // No job waiting to be executed so put the worker back in worker queue
-            this.workerQueue.push(worker);
+            // Chek that pool size has'nt been modified first
+            // Re add worker only if number of running worker are less than poolSize
+            if (this.running < this.poolSize) {
+                console.log("currently running workers" + this.running)
+                this.workerQueue.push(worker);
+            } else {
+                console.log("not pushing worker back because poolsize is smaller")
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
@@ -17,10 +17,11 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import PoolSettings from './PoolSettings';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
   },
@@ -76,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  title: {
+    flexGrow: 1
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -113,9 +117,10 @@ const App = ({ open, openMenuDrawer, closeMenuDrawer }: AppProps) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" className={classes.title}>
             JS Lambdas App
           </Typography>
+          <PoolSettings></PoolSettings>
         </Toolbar>
       </AppBar>
       <Drawer

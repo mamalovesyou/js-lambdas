@@ -1,8 +1,8 @@
 import { WorkerPool } from './WorkerPool';
 import * as JobCreator from './Job';
 
-export const createWorkerPool = (poolSize: number): WorkerPool => {
-    return new WorkerPool(poolSize)
+export const createWorkerPool = (poolSize: number, minPoolSize: number = 1): WorkerPool => {
+    return new WorkerPool(poolSize, minPoolSize)
 }
 
 export const createJob = JobCreator.createJob;

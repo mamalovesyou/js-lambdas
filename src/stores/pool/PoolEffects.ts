@@ -12,7 +12,10 @@ function * initialSaga() {
 export function* onSetMaxWorkers() {
     yield takeEvery(ActionTypes.SET_MAX_WORKERS, function* ({ payload }:  ActionTypes.SetMaxWorkersInterface) {
         // Resize pool
-        // pool.addJob(job);
+        pool.resize(payload);
+        
+        // Update refresh pool status
+        yield put(Actions.getPoolStatus())
     });
 }
 
