@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "NODE_ENV=production webpack --config webpack/prod.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -48,5 +48,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "add": "^2.0.6",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^6.0.3",
+    "css-loader": "^3.6.0",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "image-webpack-loader": "^6.0.0",
+    "react-dev-utils": "^10.2.1",
+    "webpack": "4.42.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^4.2.2",
+    "webpack-node-externals": "^1.7.2",
+    "yarn": "^1.22.4"
   }
 }

@@ -17,9 +17,6 @@ import { getPoolStatus } from '../stores/jobs/JobsActions';
 
 // Ace editor
 import AceEditor from 'react-ace';
-import "ace-builds/webpack-resolver";
-import "ace-builds/src-noconflict/mode-javascript";
-
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
