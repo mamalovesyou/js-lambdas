@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Page from '../components/Page';
-import Panel from '../components/Panel';
+import ScriptPanel from '../components/ScriptPanel';
 import ResultPanel from '../components/ResultPanel';
 import PoolStatus from '../components/PoolStatus';
 import { getPoolStatus } from '../stores/jobs/JobsActions';
@@ -69,24 +69,11 @@ const WorkerModePage = ({ pool, history, getStatus }: PropsFromRedux) => {
                 <Paper className={classes.root} key={job.id}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <Panel header="Function" >
-                                <AceEditor
-                                    width='100%'
-                                    mode="javascript"
-                                    theme="monokai"
-                                    fontSize={14}
-                                    showGutter={false}
-                                    showPrintMargin={true}
-                                    minLines={8}
-                                    maxLines={8}
-                                    value={job.script}
-                                    readOnly
-                                />
-                            </Panel>
+                            <ScriptPanel script={job.script} recievedAt={job.recievedAt}></ScriptPanel>
 
                         </Grid>
                         <Grid item xs={6}>
-                            <ResultPanel result={job.result} error={job.error}></ResultPanel>
+                            <ResultPanel result={job.result} error={job.error} finishedAt={job.finishedAt}></ResultPanel>
                         </Grid>
                     </Grid>
                 </Paper>

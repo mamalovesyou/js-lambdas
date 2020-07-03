@@ -64,10 +64,13 @@ export class JobWorker {
         // Tell the pool I am not running anymore
         this._pool.running--;
         if (this.job) {
+            // Store finished time
             const result = { 
                 result: data, 
                 id: this.job.id, 
-                script: this.job.script 
+                script: this.job.script,
+                recievedAt: this.job.recievedAt,
+                finishedAt: Date.now(),
             }
             // execute job callback
             this.job.onResult(result);
@@ -82,10 +85,13 @@ export class JobWorker {
         // Tell the pool I am not running anymore
         this._pool.running--;
         if (this.job) {
+            // Store finished time
             const result = { 
                 error: data, 
                 id: this.job.id, 
-                script: this.job.script 
+                script: this.job.script,
+                recievedAt: this.job.recievedAt,
+                finishedAt: Date.now(),
             }
             // execute job callback
             this.job.onResult(result);

@@ -34,6 +34,7 @@ export class WorkerPool {
     }
 
     addJob(job: Job) {
+        job.recievedAt =  Date.now();
         // Check if a worker is available
         if (this.workerQueue.length > 0) {
             // get the first worker available (left of the list)

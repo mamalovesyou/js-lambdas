@@ -9,9 +9,10 @@ export const createJob = JobCreator.createJob;
 
 // Job interface
 export interface Job {
-    id?: string;
+    id: string;
     script: string;
-    onResult: (result: any) => void
+    onResult: (result: any) => void,
+    recievedAt?: number;
 }
 
 // Job Result interface
@@ -20,6 +21,8 @@ export interface JobResult {
     script: string;
     result?: string;
     error?: string;
+    recievedAt: number;
+    finishedAt: number;
 }
 
 // WorkerPoolStats interface

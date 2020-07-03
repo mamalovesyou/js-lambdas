@@ -31,7 +31,8 @@ const initialCode = `function(){
 const mapState = (state: AppStateType) => ({
     inProgress: state.jobs.latest ? state.jobs.latest.inProgress : false,
     result: state.jobs.latest ? state.jobs.latest.result : undefined,
-    error: state.jobs.latest ? state.jobs.latest.error : undefined
+    error: state.jobs.latest ? state.jobs.latest.error : undefined,
+    finishedAt: state.jobs.latest ? state.jobs.latest.finishedAt : undefined
 });
 
 const mapDispatch = (dispatch: Dispatch) => ({
@@ -42,7 +43,7 @@ const connector = connect(mapState, mapDispatch)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-const EditorModePage = ({error, result, inProgress, submitScript}: PropsFromRedux) => {
+const EditorModePage = ({error, result, inProgress, submitScript, finishedAt}: PropsFromRedux) => {
 
     const classes = useStyles();
     const [code, setCode] = React.useState(initialCode)
@@ -85,7 +86,7 @@ const EditorModePage = ({error, result, inProgress, submitScript}: PropsFromRedu
                         }} />
                 </Grid>
                 <Grid item xs={6}>
-                    <ResultPanel inProgress={inProgress} result={result} error={error}></ResultPanel>
+                    <ResultPanel inProgress={inProgress} result={result} error={error} finishedAt={finishedAt}></ResultPanel>
                 </Grid>
             </Grid>
         </Page>
