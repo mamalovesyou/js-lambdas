@@ -124,7 +124,6 @@ export class JobWorker {
     createErrorCallback() {
         const instance = this;
         return (event: ErrorEvent) => {
-            console.log("error callback");
             if (instance.job && event.message) {
                 // Send error
                 instance.sendError(event.message);

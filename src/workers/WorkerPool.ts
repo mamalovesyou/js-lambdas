@@ -39,6 +39,7 @@ export class WorkerPool {
         // Check that new size is valid
         if (newSize < this.minPoolSize || newSize === this.poolSize) return
 
+        // Check for a
         if (this.running < newSize && this.poolSize < newSize) {
             for (var i = 0; i < (newSize-this.poolSize); i++) {
                 const worker = new JobWorker(this)
@@ -51,8 +52,8 @@ export class WorkerPool {
                 }
             }
         } else {
+            // Set size
             this.poolSize = newSize;
-            console.log("down size pool: ", this.poolSize)
         }
     }
 
@@ -84,12 +85,10 @@ export class WorkerPool {
         } else {
             // No job waiting to be executed so put the worker back in worker queue
             // Chek that pool size has'nt been modified first
-            // Re add worker only if number of running worker are less than poolSize
-            if (this.running < this.poolSize) {
-                console.log("currently running workers" + this.running)
+            // Re add worker only if number of running worker and 
+            // len of available workers are less than poolSize
+            if ((this.running + this.workerQueue.length) < this.poolSize) {
                 this.workerQueue.push(worker);
-            } else {
-                console.log("not pushing worker back because poolsize is smaller")
             }
         }
     }

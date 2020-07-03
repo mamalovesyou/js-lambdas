@@ -5,7 +5,6 @@ export const WrappScriptForWorker = (script: string): string => {
     const wrapped = `const task = ${script}
     const taskPromise = () => new Promise(resolve => resolve(task()));
     taskPromise().then(result => {
-        console.log(result);
         self.postMessage({type: 'result', result: result})
     }).catch(error => self.postMessage({error: error.message}));`;
     return wrapped;
