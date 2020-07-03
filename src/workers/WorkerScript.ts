@@ -8,7 +8,7 @@ export const WrappScriptForWorker = (script: string): string => {
     taskPromise().then(result => {
         console.log(result);
         self.postMessage({type: 'result', result: result})
-    });`;
+    }).catch(error => self.postMessage({error: error.message}));`;
     return wrapped;
 }
 

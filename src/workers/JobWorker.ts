@@ -45,21 +45,40 @@ export class JobWorker {
 
    // Send result and tell the pool I am free
    // Clear the job for this task worker
-    sendAndFree(result: string) {
+    free() {
         this._worker ? this._worker.terminate() : console.log("Failed to terminate worker (null reference");
-        this._pool.running--;
-        this.sendResult(result);
         this._pool.freeJobWorker(this);
     }
 
     // Send the result for a job and clear it
     sendResult(data: string) {
+        // Tell the pool I am not running anymore
+        this._pool.running--;
         if (this.job) {
             const result = { 
                 result: data, 
                 id: this.job.id, 
                 script: this.job.script 
             }
+            // execute job callback
+            this.job.onResult(result);
+        } else {
+            console.log("Cannot send result, job is ", this.job)
+        }
+        this.job = null;
+    }
+
+    // Send the result for a job and clear it
+    sendError(data: string) {
+        // Tell the pool I am not running anymore
+        this._pool.running--;
+        if (this.job) {
+            const result = { 
+                error: data, 
+                id: this.job.id, 
+                script: this.job.script 
+            }
+            // execute job callback
             this.job.onResult(result);
         } else {
             console.log("Cannot send result, job is ", this.job)
@@ -72,8 +91,17 @@ export class JobWorker {
         const instance = this;
         return (event: MessageEvent) => {
             if (instance.job && event.data && event.data.type === "result") {
-                // Send result and tell the pool I am free
-                instance.sendAndFree(event.data.result);
+                // Send result
+                instance.sendResult(event.data.result);
+                // Tell the pool I am free
+                instance.free();
+            } 
+            // Handle case we catch the error in the promise 
+            else if(instance.job && event.data && event.data.error) {
+                // Send error
+                instance.sendError(event.data.error);
+                // Tell the pool I am free
+                instance.free();
             }
         }
     }
@@ -81,9 +109,12 @@ export class JobWorker {
     createErrorCallback() {
         const instance = this;
         return (event: ErrorEvent) => {
+            console.log("error callback");
             if (instance.job && event.message) {
-                // Send result and tell the pool I am free
-                instance.sendAndFree(event.message);
+                // Send error
+                instance.sendError(event.message);
+                // Tell the pool I am free
+                instance.free();
             }
         }
     }
