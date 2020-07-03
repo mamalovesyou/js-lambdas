@@ -5,6 +5,7 @@ import useInterval from '../hooks/useInterval';
 
 // Ace editor
 import AceEditor from 'react-ace';
+import 'ace-builds/webpack-resolver'; // needed to avoid worker error
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 
