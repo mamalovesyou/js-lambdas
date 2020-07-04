@@ -1,3 +1,4 @@
+import { readFile } from "fs";
 
 // Script wrapper to ensure code is run properly
 // Making code as promise ensure correct order execution (async code for example)
@@ -14,16 +15,21 @@ export const WorkerScriptBuilder = (script: string): Blob => {
 
     // Wrapp script for worker
     const wrappedScript = WrappScriptForWorker(script);
-    var blob;
+    const blob = createBlob(wrappedScript, {type: 'application/javascript'});
+    return blob;
+}
+
+export const createBlob = (content: string, property: BlobPropertyBag) => {
+    var blob
     // Create a blob
     try {
-        blob = new Blob([wrappedScript], {type: 'application/javascript'});
+        blob = new Blob([content], property);
     } catch (e) { 
         // Handle backwards compatibility
         const w = (window as any)
         const BlobBuilder = w.BlobBuilder || w.WebKitBlobBuilder || w.MozBlobBuilder;
         blob = new BlobBuilder();
-        blob.append(wrappedScript);
+        blob.append(content);
         blob = blob.getBlob();
     }
     return blob;
@@ -36,3 +42,4 @@ export const GetBlobUrl = (blob: Blob): string => {
     const URL = w.URL || w.webkitURL;
     return URL.createObjectURL(blob);
 }
+

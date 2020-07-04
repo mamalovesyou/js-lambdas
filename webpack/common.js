@@ -6,19 +6,10 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    target: 'node', // in order to ignore built-in modules like path, fs, etc. 
+    target: 'web', 
     externals: [nodeExternals()], // in order to ignore all modules in node_modules folder 
     resolve: {
         modules: ['node_modules', 'src'],
-        alias: {
-            Workers: resolve(__dirname, "../src/workers"),
-            Containers: resolve(__dirname, "../src/containers"),
-            Component: resolve(__dirname, "../src/components"),
-            stores: resolve(__dirname, "../src/stores"),
-            utils: resolve(__dirname, "../src/utils"),
-            routes: resolve(__dirname, "../src/routes"),
-            hooks: resolve(__dirname, "../src/hooks"),
-        },
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     output: {
@@ -28,7 +19,7 @@ module.exports = {
     },
     module: {
         rules: [
-            {
+            {  
                 test: /\.jsx?$/,
                 use: ["babel-loader"],
             },
@@ -51,7 +42,7 @@ module.exports = {
             inject: true,
             template: resolve(__dirname, '../public', 'index.html'),
             // favicon: resolve(__dirname, '../public', 'favicon.ico'),
-            // // manifest: resolve(__dirname, '../public', 'manifest.json'),
+            manifest: resolve(__dirname, '../public', 'manifest.json'),
             // // robots: resolve(__dirname, '../public', 'robots.txt'),
             // // logo192: resolve(__dirname, '../public', 'logo192.png'),
             // // logo512: resolve(__dirname, '../public', 'logo192.png')

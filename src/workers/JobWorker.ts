@@ -1,6 +1,6 @@
 import { WorkerPool } from "./WorkerPool";
 import { WorkerScriptBuilder, GetBlobUrl } from "./WorkerScript";
-import { Job, JobResult } from '.';
+import { Job, JobResult, WorkerInterface } from '.';
 /*
 The Web Worker provides an API postMessage() to exchange 
 message between main and web worker thread. But we need a better api 
@@ -14,7 +14,7 @@ to communicate with our WorkerPool. */
  * @param {WorkerPool} [pool]   parent WorkerPool
  * @constructor
  */
-export class JobWorker {
+export class JobWorker implements WorkerInterface {
 
     _pool: WorkerPool;
     _worker: Worker | null;

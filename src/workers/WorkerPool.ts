@@ -2,22 +2,28 @@
 
 
 import { JobWorker } from './JobWorker';
-import { Job, WorkerPoolStats,  } from '.';
+import { Job, WorkerPoolStats, WorkerInterface  } from '.';
 
 /**
  * A WorkerPool to manage JobWorkers
  * @param {Number} [size]   Pool size (max number of workers)
  * @constructor
  */
+
+export const TAB_MODE = "tabs";
+export const WORKER_MODE = "worker";
+
 export class WorkerPool {
 
     jobQueue: Job[];
-    workerQueue: JobWorker[];
+    workerQueue: WorkerInterface[];
     poolSize: number;
     minPoolSize: number;
     running: number;
+    mode: string;
     
-    constructor(size: number, minSize: number = 1) {
+    constructor(size: number, minSize: number = 1, mode=WORKER_MODE) {
+        this.mode = mode;
         this.jobQueue = [];
         this.workerQueue = [];
         this.minPoolSize = minSize;
@@ -30,8 +36,21 @@ export class WorkerPool {
 
     // Initialize the pool with a certain number of worker
     private init() {
-        for (var i = 0; i < this.poolSize; i++) {
-            this.workerQueue.push(new JobWorker(this));
+        switch(this.mode) {
+            // Cannot access chrome api
+            // case TAB_MODE:
+            //     for (var i = 0; i < this.poolSize; i++) {
+            //         const tabWorker = new TabWorker(this);
+            //         this.workerQueue.push(tabWorker);
+            //         tabWorker.init();
+            //     }
+
+            case WORKER_MODE:
+            default:
+                for (var i = 0; i < this.poolSize; i++) {
+                    this.workerQueue.push(new JobWorker(this));
+                }
+
         }
     }
 

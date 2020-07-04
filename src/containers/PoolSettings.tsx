@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { setMaxWorkers } from 'src/stores/pool/PoolActions';
+import { setMaxWorkers } from '../stores/pool/PoolActions';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 export const PoolSettings = ({ size, applyChanges }: PropsFromRedux) => {

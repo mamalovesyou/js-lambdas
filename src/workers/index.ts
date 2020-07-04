@@ -37,9 +37,15 @@ export interface WorkerPoolStats {
     size: number;
 }
 
+
 declare global {
     interface Window { workerPool?: WorkerPool; }
 }
 
+// Provide an interface to run a job and tell the pool I am free
+export interface WorkerInterface {
+    run: (job: Job) => void;
+    free: () => void;
+};
 
 export default createWorkerPool;
