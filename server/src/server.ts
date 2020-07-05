@@ -20,8 +20,11 @@ const server = http.createServer(app);
 //initialize the WebSocket server instance
 const wss = new WebSocket.Server({ server });
 
+const pool = new WorkerPool();
+
 wss.on('connection', (ws: WebSocket) => {
     // Add worker to the pool
+    pool.addWebWorker(ws);
     console.log("New connection open that means a new worker!");
 
     //send immediatly a feedback to the incoming connection    
