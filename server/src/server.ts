@@ -1,17 +1,10 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
-import * as cors from 'cors';
 import { AddressInfo } from 'net';
-import { generateId } from './utils';
-import { scriptsRouter } from './scripts/scripts.router';
 import { WorkerPool } from './workers/WorkerPool';
 
 const app = express();
-app.use(cors());
-app.options('*', cors());
-app.use(express.json());
-app.use("/scripts", scriptsRouter);
 
 //initialize a simple http server
 const server = http.createServer(app);
@@ -25,7 +18,6 @@ const pool = new WorkerPool();
 wss.on('connection', (ws: WebSocket) => {
     // Add worker to the pool
     pool.addWebWorker(ws);
-    console.log("New connection open that means a new worker!");
 });
 
 

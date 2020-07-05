@@ -2,6 +2,7 @@ import * as WebSocket from 'ws';
 import { Job, WebWorker, JobResult } from "./workers.interface";
 import { createJob } from "./Job";
 import MyWebWorker from "./WebWorker";
+import { Logger } from '../logger';
 
 
 
@@ -16,10 +17,12 @@ export class WorkerPool {
 
     jobQueue: Job[];
     workerQueue: WebWorker[];
+    logger: Logger;
     
     constructor() {
         this.jobQueue = [];
         this.workerQueue = [];
+        this.logger = new Logger('Pool');
     }
 
     // Add a new worker to the pool
@@ -28,36 +31,16 @@ export class WorkerPool {
         // Create and the worker to the queue
         const worker = new MyWebWorker(this, ws);
         this.workerQueue.push(worker);
+        this.logger.info("Connection established with new worker: " + worker.id);
     }
 
     // Remove a web worker from the queue
     // Usefuul to handle disconnection
     removeWeborker(id: string) {
-        console.log("Removing worker from queue");
         this.workerQueue = this.workerQueue.filter(worker => worker.id !== id);
+        this.logger.info("Connection lost with worker: " + id);
     }
 
-    addJob(job: Job) {
-        // Check if a worker is available
-        if (this.workerQueue.length > 0) {
-            // get the first worker available (left of the list)
-            const worker = this.workerQueue.shift();
-            // Send the job
-
-            // Add job to worker witing list and set it as latest
-            if (worker) {
-                worker.waitingJobs.push(job);
-                worker.latestSubmitJob = job;
-            }
-            else{
-                console.log("Ooops... trying to send a job to undefined");
-            }
-
-        } else {
-            // no workers so we need to queue the job
-            this.jobQueue.push(job);
-        }
-    }
 
     // Called when a result is send back by the worker
     jobDone(result: JobResult) {
@@ -67,6 +50,7 @@ export class WorkerPool {
             if(worker.latestSubmitJob && worker.latestSubmitJob.id === result.id) {
                 // Send response to worker
                 // ws send message
+                this.logger.info("Forwarding result to worker: " + worker.id);
             }
         });
     }
@@ -77,15 +61,18 @@ export class WorkerPool {
         
         // Make sure there is ta worker
         if (this.workerQueue.length > 0) {
-
             // Sort worker to find the one that has fewer jobs in its witing list
             this.workerQueue.sort((a: WebWorker, b: WebWorker) => (a.waitingJobs.length - b.waitingJobs.length))
+            this.logger.debug("Sorted workerQueue: " + this.workerQueue);
             // Dispatch job to the the first as list is sorted
+            this.logger.info("Sending job to worker: " + this.workerQueue[0].id);
             this.workerQueue[0].sendJob(job);
+
 
         } else {
             // Queue the job if no worker are available
             this.jobQueue.push(job);
+            this.logger.info("No worker available. Queue job: " + job.id);
         }
 
     }

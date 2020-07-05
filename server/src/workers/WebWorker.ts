@@ -3,6 +3,7 @@ import { Job, WebWorker, JobResult} from './workers.interface';
 import { generateId } from "../utils";
 import { WorkerPool } from './WorkerPool';
 import * as Messages from '../messages';
+import { Logger } from '../logger';
 
 class MyWebWorker implements WebWorker {
 
@@ -11,12 +12,14 @@ class MyWebWorker implements WebWorker {
     latestSubmitJob?: Job;
     socket: WebSocket;
     pool: WorkerPool;
+    logger: Logger;
 
     constructor(pool: WorkerPool, ws: WebSocket) {
         this.id = generateId()
-        this.waitingJobs = []
-        this.socket = ws
+        this.waitingJobs = [];
+        this.socket = ws;
         this.pool = pool;
+        this.logger = new Logger(`Worker: ${this.id}`);
 
         // Listeners
         this.socket.on('message', this.onMessage()); // Handle incomming messages
@@ -29,36 +32,38 @@ class MyWebWorker implements WebWorker {
     sendJob(job: Job) {
         const msg = Messages.createJobMessage(job);
         this.socket.send(msg);
+        // Add job to waiting list
+        this.waitingJobs.push(job);
+        this.logger.debug("Job sent with payload: " + msg);
     }
 
     onMessage() {
         const instance = this;
         return (message: string) => {
             const parsedMsg: Messages.SharedMessage = JSON.parse(message);
-            console.log("Recieved: " + parsedMsg);
             switch (parsedMsg.type) {
                 // Case we recieved a result
                 case Messages.SHARED_JOB_RESULT:
-                    console.log("Recieved Job result")
-                    instance.onJobDone((parsedMsg as Messages.ISharedJobResult).result)
+                    const jobResult = (parsedMsg as Messages.ISharedJobResult).result
+                    this.logger.info("Recieved job result for job: " + jobResult.id);
+                    instance.onJobDone(jobResult);
                     return
                 // Case we recieved a script
                 case Messages.SHARED_SCRIPT:
-                    console.log("Recieved script")
+                    this.logger.info("Recieved new script");
                     instance.pool.submitScript((parsedMsg as Messages.ISharedScript).script)
                     return
                 default:
-                    console.log("Unknown message submitted: " + parsedMsg.type)
+                    this.logger.warn("Unknown message recieved. Ignoring it. " + message);
             }
         }
     }
 
     // Call when a job is done and we got a result back
     onJobDone(result: JobResult) {
-        console.log("removing job from waiting jobs");
         // Remove job from list
         this.waitingJobs = this.waitingJobs.filter(job => { return job.id === result.id });
-        console.log("new waiting jobs: ", this.waitingJobs);
+        this.logger.debug(`Removing job: ${result.id} from witing list. ${this.waitingJobs.length} remaining jobs.`);
         // Tell the pool I am done
         this.pool.jobDone(result);
     }
@@ -66,12 +71,16 @@ class MyWebWorker implements WebWorker {
     // Call when the client is diconnected
     onDisconnect() {
         return () => {
-            console.log("Disconnection...")
+            this.logger.info(`Disconnected...`);
             // Remove the worker from the list
             this.pool.removeWeborker(this.id);
 
             // TODO: move waiting jobs on other worker
         }
+    }
+
+    toString() {
+        return `Worker<${this.id}>`
     }
 
 }
