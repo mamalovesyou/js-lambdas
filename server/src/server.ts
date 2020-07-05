@@ -26,9 +26,6 @@ wss.on('connection', (ws: WebSocket) => {
     // Add worker to the pool
     pool.addWebWorker(ws);
     console.log("New connection open that means a new worker!");
-
-    //send immediatly a feedback to the incoming connection    
-    ws.send('Hi there, I am a WebSocket server');
 });
 
 

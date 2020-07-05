@@ -24,21 +24,5 @@ export interface WebWorker {
     onJobDone: (result: JobResult) => void;
 }
 
-export interface Message {
-    type: string;
-}
-
-export interface JobMessage extends Message{
-    job: Job;
-}
-
-export interface ResultMessage extends Message{
-    result: JobResult;
-}
-
-export interface ScriptMessage extends Message{
-    script: string;
-}
-
 
 export default createWorkerPool;

@@ -1,8 +1,8 @@
 import * as WebSocket from 'ws';
-import { Job, WebWorker, JobResult, Message, ResultMessage, ScriptMessage } from './workers.interface';
+import { Job, WebWorker, JobResult} from './workers.interface';
 import { generateId } from "../utils";
-import { createJobMessage } from "./Message";
 import { WorkerPool } from './WorkerPool';
+import * as Messages from '../messages';
 
 class MyWebWorker implements WebWorker {
 
@@ -20,29 +20,33 @@ class MyWebWorker implements WebWorker {
 
         // Listeners
         this.socket.on('message', this.onMessage()); // Handle incomming messages
-        this.socket.on('disconnect', this.onDisconnect()); // Handle when a worker is disconnected
-        this.socket.onclose = this.onDisconnect();
-        this.socket.send(JSON.stringify({type: "init", workerId: this.id}));
+        this.socket.onclose = this.onDisconnect(); // Handle when a worker is closed
+
+        // Send Id to worker
+        this.socket.send(Messages.createWorkerIdMessage(this.id));
     }
 
     sendJob(job: Job) {
-        const msg = createJobMessage(job);
+        const msg = Messages.createJobMessage(job);
         this.socket.send(msg);
     }
 
     onMessage() {
         const instance = this;
         return (message: string) => {
-            const parsedMsg: Message = JSON.parse(message);
+            const parsedMsg: Messages.SharedMessage = JSON.parse(message);
+            console.log("Recieved: " + parsedMsg);
             switch (parsedMsg.type) {
                 // Case we recieved a result
-                case "job-result":
-                    instance.onJobDone((parsedMsg as ResultMessage).result)
-
-                // case we recieved a new script
-                case "new-script":
-                    instance.pool.submitScript((parsedMsg as ScriptMessage).script)
-
+                case Messages.SHARED_JOB_RESULT:
+                    console.log("Recieved Job result")
+                    instance.onJobDone((parsedMsg as Messages.ISharedJobResult).result)
+                    return
+                // Case we recieved a script
+                case Messages.SHARED_SCRIPT:
+                    console.log("Recieved script")
+                    instance.pool.submitScript((parsedMsg as Messages.ISharedScript).script)
+                    return
                 default:
                     console.log("Unknown message submitted: " + parsedMsg.type)
             }
@@ -51,8 +55,10 @@ class MyWebWorker implements WebWorker {
 
     // Call when a job is done and we got a result back
     onJobDone(result: JobResult) {
+        console.log("removing job from waiting jobs");
         // Remove job from list
         this.waitingJobs = this.waitingJobs.filter(job => { return job.id === result.id });
+        console.log("new waiting jobs: ", this.waitingJobs);
         // Tell the pool I am done
         this.pool.jobDone(result);
     }
