@@ -21,6 +21,7 @@ class MyWebWorker implements WebWorker {
         // Listeners
         this.socket.on('message', this.onMessage()); // Handle incomming messages
         this.socket.on('disconnect', this.onDisconnect()); // Handle when a worker is disconnected
+        this.socket.onclose = this.onDisconnect();
         this.socket.send(JSON.stringify({type: "init", workerId: this.id}));
     }
 
@@ -41,8 +42,9 @@ class MyWebWorker implements WebWorker {
                 // case we recieved a new script
                 case "new-script":
                     instance.pool.submitScript((parsedMsg as ScriptMessage).script)
+
                 default:
-                    console.log("Unknown message submitted...")
+                    console.log("Unknown message submitted: " + parsedMsg.type)
             }
         }
     }
