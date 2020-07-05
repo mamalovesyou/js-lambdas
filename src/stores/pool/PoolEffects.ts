@@ -1,6 +1,7 @@
-import { takeEvery, put, fork } from 'redux-saga/effects';
+import { takeEvery, put, fork, call, all } from 'redux-saga/effects';
 import * as ActionTypes from './PoolActionTypes';
 import * as Actions from './PoolActions';
+import { setLatestJob } from '../jobs/JobsActions';
 import { WorkerPool } from '../../workers/WorkerPool';
 
 // Get Pool Status when app init 
@@ -40,10 +41,30 @@ export function* onGetPoolStatus() {
     });
 }
 
+// Called when user submit a script
+export function* onDispatchJob() {
+    yield takeEvery(ActionTypes.DISPATCH_JOB, function* ({ payload }: ActionTypes.DispatchJobInterface) {
+        // Resize pool
+        const pool = WorkerPool.getWorkerPoolInstance();
+        if (pool) {
+            pool.addJob(payload);
+            yield all([
+                // Set Latest job
+                put(setLatestJob(payload)),
+                // Update pool status
+                put(Actions.getPoolStatus())
+            ]);
+        } else {
+            throw new Error("Error: Cannot add job to the pool. workerPool is not defined in window scope")
+        }
+    });
+}
+
 export const JobsEffect = [
     fork(initialSaga),
     fork(onSetMaxWorkers),
-    fork(onGetPoolStatus)
+    fork(onGetPoolStatus),
+    fork(onDispatchJob)
 ];
 
 export default JobsEffect

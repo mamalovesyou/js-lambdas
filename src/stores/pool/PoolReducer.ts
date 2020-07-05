@@ -10,7 +10,7 @@ const initialJobsState: PoolStateType = {
     running: 0
 }
 
-const PoolReducer = (state: PoolStateType = initialJobsState, action: ActionType.JobsActionType) => {
+const PoolReducer = (state: PoolStateType = initialJobsState, action: ActionType.PoolActionType) => {
 
     switch (action.type) {
 

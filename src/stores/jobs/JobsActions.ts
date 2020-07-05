@@ -16,12 +16,3 @@ export const setJobResult = (result: JobResult): ActionTypes.JobsActionType => (
     type: ActionTypes.SET_JOB_RESULT,
     payload: result
 });
-
-export const getPoolStatus = (): ActionTypes.GetPoolStatusInterface => ({
-    type: ActionTypes.GET_POOL_STATUS
-});
-
-export const setPoolStatus = (status: WorkerPoolStats): ActionTypes.SetPoolStatusInterface => ({
-    type: ActionTypes.SET_POOL_STATUS,
-    payload: status
-});

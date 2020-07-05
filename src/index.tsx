@@ -15,7 +15,7 @@ import JsLambdasApi from './api';
 const pool = createWorkerPool(4);
 
 // Construct API
-export const api: JsLambdasApi = new JsLambdasApi();
+export const api = new JsLambdasApi();
 
 export const store = configureStore();
 
