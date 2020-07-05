@@ -1,0 +1,23 @@
+version: '3.6'
+services:
+  socket-server:
+    build: ./server
+    networks:
+      - jslambdas
+    ports:
+      - 8000:8000
+    restart: always
+
+  app:
+    build: ./webapp
+    depends_on:
+      - socket-server
+    networks:
+      - jslambdas
+    ports:
+      - 3000:3000
+    # Needed for latest version of react-scripts
+    stdin_open: true
+
+networks:
+  jslambdas:
