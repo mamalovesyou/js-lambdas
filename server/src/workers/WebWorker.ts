@@ -20,7 +20,8 @@ class MyWebWorker implements WebWorker {
 
         // Listeners
         this.socket.on('message', this.onMessage()); // Handle incomming messages
-        this.socket.on('disconnect', this.onDisconnect); // Handle when a worker is disconnected
+        this.socket.on('disconnect', this.onDisconnect()); // Handle when a worker is disconnected
+        this.socket.send(JSON.stringify({type: "init", workerId: this.id}));
     }
 
     sendJob(job: Job) {
@@ -32,11 +33,11 @@ class MyWebWorker implements WebWorker {
         const instance = this;
         return (message: string) => {
             const parsedMsg: Message = JSON.parse(message);
-            switch(parsedMsg.type) {
+            switch (parsedMsg.type) {
                 // Case we recieved a result
-                case "job-result":   
+                case "job-result":
                     instance.onJobDone((parsedMsg as ResultMessage).result)
-                
+
                 // case we recieved a new script
                 case "new-script":
                     instance.pool.submitScript((parsedMsg as ScriptMessage).script)
@@ -56,7 +57,13 @@ class MyWebWorker implements WebWorker {
 
     // Call when the client is diconnected
     onDisconnect() {
+        return () => {
+            console.log("Disconnection...")
+            // Remove the worker from the list
+            this.pool.removeWeborker(this.id);
 
+            // TODO: move waiting jobs on other worker
+        }
     }
 
 }

@@ -30,6 +30,13 @@ export class WorkerPool {
         this.workerQueue.push(worker);
     }
 
+    // Remove a web worker from the queue
+    // Usefuul to handle disconnection
+    removeWeborker(id: string) {
+        console.log("Removing worker from queue");
+        this.workerQueue = this.workerQueue.filter(worker => worker.id !== id);
+    }
+
     addJob(job: Job) {
         // Check if a worker is available
         if (this.workerQueue.length > 0) {

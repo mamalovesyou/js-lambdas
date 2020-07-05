@@ -1,5 +1,6 @@
 import { WorkerPool } from './WorkerPool';
 import * as JobCreator from './Job';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 export const createWorkerPool = (poolSize: number, minPoolSize: number = 1): WorkerPool => {
     // Store our worker pool in window (better for units tests)
@@ -39,7 +40,11 @@ export interface WorkerPoolStats {
 
 
 declare global {
-    interface Window { workerPool?: WorkerPool; }
+    interface Window { 
+        workerPool?: WorkerPool;
+        jslambdasMode: string;
+        jslambdasSocketClient: W3CWebSocket;
+    }
 }
 
 // Provide an interface to run a job and tell the pool I am free
