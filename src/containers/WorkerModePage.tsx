@@ -27,19 +27,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const mapState = (state: AppStateType) => ({
     history: state.jobs.history,
-    pool: state.pool
+    pool: state.pool,
+    workerId: state.socket.workerId
 });
 
 const connector = connect(mapState, null);
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-const WorkerModePage = ({ pool, history, getStatus }: PropsFromRedux) => {
+const WorkerModePage = ({ pool, history, workerId }: PropsFromRedux) => {
 
     const classes = useStyles();
 
     return (
-        <Page title="Worker Mode"
+        <Page title={`Worker Mode [${workerId}]`}
             subHeader={
                 <div className={classes.status}>
                     <Typography variant="subtitle1" color="textSecondary">Status: </Typography>

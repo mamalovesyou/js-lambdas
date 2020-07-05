@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { openMenuDrawer, closeMenuDrawer } from '../stores/ui/UIActions';
 import { appRoutes } from '../routes';
@@ -18,6 +18,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PoolSettings from './PoolSettings';
+import { Chip } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -84,15 +85,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  status: {
+    margin: theme.spacing(0, 3)
+  }
 }));
 
-type AppProps = {
-  open: boolean;
-  openMenuDrawer: () => void
-  closeMenuDrawer: () => void
-}
-
-const App = ({ open, openMenuDrawer, closeMenuDrawer }: AppProps) => {
+const App = ({ open, socketMode, openMenuDrawer, closeMenuDrawer }: PropsFromRedux) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -120,6 +118,7 @@ const App = ({ open, openMenuDrawer, closeMenuDrawer }: AppProps) => {
           <Typography variant="h6" className={classes.title}>
             JS Lambdas App
           </Typography>
+          <Chip className={classes.status} label={socketMode ? "Socket Mode" : "Local Mode"} color="secondary" />
           <PoolSettings></PoolSettings>
         </Toolbar>
       </AppBar>
@@ -160,13 +159,17 @@ const App = ({ open, openMenuDrawer, closeMenuDrawer }: AppProps) => {
   );
 }
 
-const mapStateToProps = (state: AppStateType) => ({
-  open: state.ui.drawerOpen
+const mapState = (state: AppStateType) => ({
+  open: state.ui.drawerOpen,
+  socketMode: state.socket.enabled
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatch = (dispatch: Dispatch) => ({
   openMenuDrawer: () => dispatch(openMenuDrawer()),
   closeMenuDrawer: () => dispatch(closeMenuDrawer())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+export default connector(App)

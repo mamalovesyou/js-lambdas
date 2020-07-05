@@ -11,7 +11,7 @@ const PoolStatus = ({className, pool}: Props) => {
             <RuntimeIcon className={className} type={ (pool.isBusy) ? "progress" : "success" }></RuntimeIcon>
             { (pool.isBusy) ?
                 <Typography variant="subtitle1"> {pool.running} workers are running and {pool.waitingJobs} are on hold.</Typography> :
-                <Typography variant="subtitle1"> All job executed</Typography>
+                <Typography variant="subtitle1"> No job running or waiting</Typography>
             }
         </>
 }
