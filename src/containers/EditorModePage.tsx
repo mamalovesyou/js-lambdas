@@ -25,7 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const initialCode = `function(){ 
+const initialCode = `async function(){
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    await sleep(10000);
     return [1,2,3].reduce((a,b) => a + b)
 };`;
 

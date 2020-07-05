@@ -51,7 +51,7 @@ class MyWebWorker implements WebWorker {
                 // Case we recieved a script
                 case Messages.SHARED_SCRIPT:
                     this.logger.info("Recieved new script");
-                    instance.pool.submitScript((parsedMsg as Messages.ISharedScript).script)
+                    instance.pool.submitScript((parsedMsg as Messages.ISharedScript).script, instance)
                     return
                 default:
                     this.logger.warn("Unknown message recieved. Ignoring it. " + message);

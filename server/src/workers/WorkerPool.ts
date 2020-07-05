@@ -55,10 +55,11 @@ export class WorkerPool {
         });
     }
 
-    submitScript(content: string) {
+    submitScript(content: string, worker: WebWorker) {
         // Convert script content to a job
         const job = createJob(content);
-        
+        // Set the latest submit job for the worker that sent the script
+        worker.latestSubmitJob = job;
         // Make sure there is ta worker
         if (this.workerQueue.length > 0) {
             // Sort worker to find the one that has fewer jobs in its witing list
