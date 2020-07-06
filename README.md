@@ -12,7 +12,6 @@ Starting the project is easy as: The server is verbose so if you want to see its
 $ docker-compose up 
 ```
 
-
 Then you, open a browser with url  http://localhost:3000
 
 ## Workflow
