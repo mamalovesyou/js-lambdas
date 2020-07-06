@@ -37,8 +37,14 @@ export class WorkerPool {
     // Remove a web worker from the queue
     // Usefuul to handle disconnection
     removeWeborker(id: string) {
-        this.workerQueue = this.workerQueue.filter(worker => worker.id !== id);
         this.logger.info("Connection lost with worker: " + id);
+        // Redistaching it's waiting jobs to other worker
+        const worker = this.workerQueue.find(worker => worker.id === id);
+        this.workerQueue = this.workerQueue.filter(worker => worker.id !== id);
+
+        this.logger.info("Redispatching uncomplete jobs of worker: " + worker?.id);
+        worker?.waitingJobs.forEach(job => this.dispatchJob(job))
+        
     }
 
 
@@ -64,12 +70,17 @@ export class WorkerPool {
         // Set the latest submit job for the worker that sent the script
         worker.setLatestJob(job);
         
+        // dispatch job to available worker
+        this.dispatchJob(job)
 
+    }
+
+    // Send job to a worker
+    dispatchJob(job: Job) {
         // Make sure there is ta worker
         if (this.workerQueue.length > 0) {
             // Sort worker to find the one that has fewer jobs in its witing list
             this.workerQueue.sort((a: WebWorker, b: WebWorker) => (a.waitingJobs.length - b.waitingJobs.length))
-            this.logger.debug("Sorted workerQueue: " + this.workerQueue);
             // Dispatch job to the the first as list is sorted
             this.logger.info("Sending job to worker: " + this.workerQueue[0].id);
             this.workerQueue[0].sendJob(job);
@@ -80,7 +91,6 @@ export class WorkerPool {
             this.jobQueue.push(job);
             this.logger.info("No worker available. Queue job: " + job.id);
         }
-
     }
 
 }
