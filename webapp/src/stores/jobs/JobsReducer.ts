@@ -6,42 +6,35 @@ export type JobsStateType = {
     latest: null | JobResult & {
         inProgress: boolean;
     };
-    pool: WorkerPoolStats
 }
 
 const initialJobsState: JobsStateType = {
     history: [],
-    latest: null,
-    pool: {
-        isBusy: false,
-        waitingJobs: 0,
-        running: 0,
-        size: 0
-    }
+    latest: null
 }
 
 const JobsReducer = (state: JobsStateType = initialJobsState, action: ActionType.JobsActionType) => {
 
     switch (action.type) {
+        case ActionType.SUBMIT_SCRIPT:
+            return {...state, latest: {...state.latest, inProgress:true}}
+
         case ActionType.SET_JOB_RESULT:
-            const result = (action as ActionType.SetJobResultInterface).payload
-            const isLatest = (state.latest && (state.latest.id === result.id))
+            const {result, fromSocket} = (action as ActionType.ISetJobResult).payload
+            if (fromSocket) {
+                return {...state, latest: { ...result, inProgress: false }}
+            }
+            // Check for local mode
+            const isLatest = (state.latest && state.latest.id === result.id);
             return {
-                ...state,
-                history: [result, ...state.history],
-                latest: isLatest ? {...result, inProgress: false} : state.latest
+                history: [result, ...state.history] ,
+                latest: isLatest ? { ...result, inProgress: false } : state.latest
             }
 
-        case ActionType.SET_LATEST_JOB:
-            const job = (action as ActionType.SetLatestJobInterface).payload
-            return {
-                ...state,
-                latest: {id: job.id, inProgress: true}
-            }
+        case ActionType.SET_LATEST_JOB_ID:
+            const id = (action as ActionType.ISetLatestJobId).payload.id
+            return { ...state, latest: { id, inProgress: true } }
 
-        case ActionType.SET_POOL_STATUS:
-            const status = (action as ActionType.SetPoolStatusInterface).payload
-            return {...state, pool: status}
 
         default:
             return state

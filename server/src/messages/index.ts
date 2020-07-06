@@ -5,6 +5,7 @@ export const SHARED_WORKER_ID = '@SHARED/WORKER_ID';
 export const SHARED_JOB = '@SHARED/JOB';
 export const SHARED_JOB_RESULT = '@SHARED/JOB_RESULT';
 export const SHARED_SCRIPT = '@SHARED/SCRIPT';
+export const SHARED_LATEST_JOB_ID = '@SHARED/LATEST_JOB_ID';
 
 export interface ISharedWorkerId {
     type: typeof SHARED_WORKER_ID;
@@ -26,6 +27,7 @@ export interface ISharedScript {
     script: string;
 }
 
+
 export type SharedMessage = ISharedJob | ISharedScript | ISharedJobResult | ISharedWorkerId;
 
 export const createJobMessage = (job: Job): string => {
@@ -35,5 +37,10 @@ export const createJobMessage = (job: Job): string => {
 
 export const createWorkerIdMessage = (workerId: string): string => {
     const  msg = {type: SHARED_WORKER_ID, workerId }
+    return JSON.stringify(msg)
+}
+
+export const createJobResultMessage = (result: JobResult): string => {
+    const msg = {type: SHARED_JOB_RESULT, result};
     return JSON.stringify(msg)
 }

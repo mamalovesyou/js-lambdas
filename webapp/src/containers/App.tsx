@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { openMenuDrawer, closeMenuDrawer } from '../stores/ui/UIActions';
 import { appRoutes } from '../routes';
-import AppStateType from '../stores/appState';
+import IAppState from '../stores/appState';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -159,7 +159,7 @@ const App = ({ open, socketMode, openMenuDrawer, closeMenuDrawer }: PropsFromRed
   );
 }
 
-const mapState = (state: AppStateType) => ({
+const mapState = (state: IAppState) => ({
   open: state.ui.drawerOpen,
   socketMode: state.socket.enabled
 })

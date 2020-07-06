@@ -1,7 +1,6 @@
 import { takeEvery, put, fork, call, all } from 'redux-saga/effects';
 import * as ActionTypes from './PoolActionTypes';
 import * as Actions from './PoolActions';
-import { setLatestJob } from '../jobs/JobsActions';
 import { WorkerPool } from '../../workers/WorkerPool';
 
 // Get Pool Status when app init 
@@ -11,7 +10,7 @@ function* initialSaga() {
 
 // Called when user submit a script
 export function* onSetMaxWorkers() {
-    yield takeEvery(ActionTypes.SET_MAX_WORKERS, function* ({ payload }: ActionTypes.SetMaxWorkersInterface) {
+    yield takeEvery(ActionTypes.SET_MAX_WORKERS, function* ({ payload }: ActionTypes.ISetMaxWorkers) {
         // Resize pool
         const pool = WorkerPool.getWorkerPoolInstance();
         if (pool) {
@@ -43,17 +42,13 @@ export function* onGetPoolStatus() {
 
 // Called when user submit a script
 export function* onDispatchJob() {
-    yield takeEvery(ActionTypes.DISPATCH_JOB, function* ({ payload }: ActionTypes.DispatchJobInterface) {
+    yield takeEvery(ActionTypes.DISPATCH_JOB, function* ({ payload }: ActionTypes.IDispatchJob) {
         // Resize pool
         const pool = WorkerPool.getWorkerPoolInstance();
         if (pool) {
             pool.addJob(payload);
-            yield all([
-                // Set Latest job
-                put(setLatestJob(payload)),
-                // Update pool status
-                put(Actions.getPoolStatus())
-            ]);
+            yield put(Actions.getPoolStatus());
+    
         } else {
             throw new Error("Error: Cannot add job to the pool. workerPool is not defined in window scope")
         }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppStateType from '../stores/appState';
+import IAppState from '../stores/appState';
 import { JobResult } from '../workers';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const mapState = (state: AppStateType) => ({
+const mapState = (state: IAppState) => ({
     history: state.jobs.history,
     pool: state.pool,
     workerId: state.socket.workerId

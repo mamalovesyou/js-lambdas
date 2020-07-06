@@ -1,5 +1,4 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import { JobResult } from 'src/workers';
 
 const PORT = 8000;
 const HOST = "localhost";

@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
-import AppStateType from '../stores/appState';
+import IAppState from '../stores/appState';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -62,7 +62,7 @@ export const PoolSettings = ({ size, applyChanges }: PropsFromRedux) => {
     );
 }
 
-const mapState = (state: AppStateType) => ({
+const mapState = (state: IAppState) => ({
     size: state.pool.size
 });
 

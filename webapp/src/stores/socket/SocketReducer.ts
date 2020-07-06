@@ -15,12 +15,12 @@ const SocketReducer = (state: SocketStateType = initialSocketState, action: Acti
     switch (action.type) {
 
         case ActionType.SET_SOCKET_ENABLE:
-            const enabled = (action as ActionType.SetSocketEnableInterface).payload.enabled;
+            const enabled = (action as ActionType.ISetSocketEnable).payload.enabled;
             if (!enabled) return {...state, enabled, workerId: "Local"}
             return {...state, enabled}
 
         case ActionType.SET_WORKER_ID:
-            const workerId = (action as ActionType.SetWorkerIdInterface).payload.id
+            const workerId = (action as ActionType.ISetWorkerId).payload.id
             return {...state, workerId}
 
         default:

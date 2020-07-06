@@ -15,11 +15,11 @@ const PoolReducer = (state: PoolStateType = initialJobsState, action: ActionType
     switch (action.type) {
 
         case ActionType.SET_MAX_WORKERS:
-            const size = (action as ActionType.SetMaxWorkersInterface).payload
+            const size = (action as ActionType.ISetMaxWorkers).payload
             return {...state, size}
 
         case ActionType.SET_POOL_STATUS:
-            const status = (action as ActionType.SetPoolStatusInterface).payload
+            const status = (action as ActionType.ISetPoolStatus).payload
             return {...status}
 
         default:

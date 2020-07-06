@@ -3,7 +3,7 @@ import { Job, WebWorker, JobResult } from "./workers.interface";
 import { createJob } from "./Job";
 import MyWebWorker from "./WebWorker";
 import { Logger } from '../logger';
-
+import { createJobResultMessage } from '../messages';
 
 
 
@@ -47,10 +47,12 @@ export class WorkerPool {
 
         // Check if it was the latest job submited by one of the workers
         this.workerQueue.forEach((worker) => {
+            const latestId = worker.latestSubmitJob ? worker.latestSubmitJob.id : null;
             if(worker.latestSubmitJob && worker.latestSubmitJob.id === result.id) {
                 // Send response to worker
-                // ws send message
                 this.logger.info("Forwarding result to worker: " + worker.id);
+                const msg = createJobResultMessage(result);
+                worker.socket.send(msg);
             }
         });
     }
@@ -58,8 +60,11 @@ export class WorkerPool {
     submitScript(content: string, worker: WebWorker) {
         // Convert script content to a job
         const job = createJob(content);
+
         // Set the latest submit job for the worker that sent the script
-        worker.latestSubmitJob = job;
+        worker.setLatestJob(job);
+        
+
         // Make sure there is ta worker
         if (this.workerQueue.length > 0) {
             // Sort worker to find the one that has fewer jobs in its witing list

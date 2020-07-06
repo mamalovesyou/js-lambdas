@@ -1,36 +1,28 @@
-import { JobResult, Job, WorkerPoolStats } from '../../workers';
+import { JobResult } from '../../workers';
 
 export const SUBMIT_SCRIPT = 'SUBMIT_SCRIPT';
-export const SET_LATEST_JOB = 'SET_LATEST_JOB';
+export const SET_LATEST_JOB_ID = 'SET_LATEST_JOB_ID';
 export const SET_JOB_RESULT = 'SET_JOB_RESULT';
 export const GET_POOL_STATUS = 'GET_POOL_STATUS';
 export const SET_POOL_STATUS = 'SET_POOL_STATUS';
 
-export interface SubmitScriptInterface {
+export interface ISubmitScript {
     type: typeof SUBMIT_SCRIPT;
     payload: {
         script: string;
     }
 }
 
-export interface SetLatestJobInterface {
-    type: typeof SET_LATEST_JOB;
-    payload: Job;
+export interface ISetLatestJobId {
+    type: typeof SET_LATEST_JOB_ID;
+    payload: {id: string};
 }
 
-export interface SetJobResultInterface {
+export interface ISetJobResult {
     type: typeof SET_JOB_RESULT;
-    payload: JobResult;
-}
-
-export interface GetPoolStatusInterface {
-    type: typeof GET_POOL_STATUS;
-}
-
-export interface SetPoolStatusInterface {
-    type: typeof SET_POOL_STATUS;
-    payload: WorkerPoolStats;
+    payload: { result:JobResult, fromSocket?: boolean };
 }
 
 
-export type JobsActionType = SubmitScriptInterface | SetLatestJobInterface | SetJobResultInterface | GetPoolStatusInterface | SetPoolStatusInterface;
+
+export type JobsActionType = ISubmitScript | ISetLatestJobId | ISetJobResult ;

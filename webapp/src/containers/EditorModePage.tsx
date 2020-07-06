@@ -2,7 +2,7 @@ import React from 'react';
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppStateType from '../stores/appState';
+import IAppState from '../stores/appState';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PlayIcon from '@material-ui/icons/PlayArrow';
@@ -33,7 +33,7 @@ const initialCode = `async function(){
     return [1,2,3].reduce((a,b) => a + b)
 };`;
 
-const mapState = (state: AppStateType) => ({
+const mapState = (state: IAppState) => ({
     inProgress: state.jobs.latest ? state.jobs.latest.inProgress : false,
     result: state.jobs.latest ? state.jobs.latest.result : undefined,
     error: state.jobs.latest ? state.jobs.latest.error : undefined,

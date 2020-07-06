@@ -5,25 +5,25 @@ export const GET_POOL_STATUS = 'GET_POOL_STATUS';
 export const SET_POOL_STATUS = 'SET_POOL_STATUS';
 export const DISPATCH_JOB = 'DISPATCH_JOB';
 
-export interface SetMaxWorkersInterface {
+export interface ISetMaxWorkers {
     type: typeof SET_MAX_WORKERS;
     payload: number;
 }
 
-export interface GetPoolStatusInterface {
+export interface IGetPoolStatus {
     type: typeof GET_POOL_STATUS;
 }
 
-export interface SetPoolStatusInterface {
+export interface ISetPoolStatus {
     type: typeof SET_POOL_STATUS;
     payload: WorkerPoolStats;
 }
 
-export interface DispatchJobInterface {
+export interface IDispatchJob {
     type: typeof DISPATCH_JOB;
     payload: Job;
 }
 
 
 
-export type PoolActionType = SetMaxWorkersInterface | GetPoolStatusInterface | SetPoolStatusInterface | DispatchJobInterface;
+export type PoolActionType = ISetMaxWorkers | IGetPoolStatus | ISetPoolStatus | IDispatchJob;

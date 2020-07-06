@@ -22,6 +22,7 @@ export interface WebWorker {
     socket: WebSocket;
     sendJob: (job: Job) => void;
     onJobDone: (result: JobResult) => void;
+    setLatestJob: (job: Job) => void;
 }
 
 

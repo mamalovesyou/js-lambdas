@@ -37,6 +37,11 @@ class MyWebWorker implements WebWorker {
         this.logger.debug("Job sent with payload: " + msg);
     }
 
+    setLatestJob(job: Job) {
+        this.latestSubmitJob = job;
+        this.logger.debug("Set latest submit jobId: " + job.id);
+    }
+
     onMessage() {
         const instance = this;
         return (message: string) => {
