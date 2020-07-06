@@ -16,9 +16,10 @@ to communicate with our WorkerPool. */
  */
 export class JobWorker implements WorkerInterface {
 
+    _defaultTimeout: number = 30000; // 2sec
     _pool: WorkerPool;
     _worker: Worker | null;
-    _result: JobResult | null;
+    _timeout: NodeJS.Timeout | null;
 
     job: Job | null;
 
@@ -26,7 +27,7 @@ export class JobWorker implements WorkerInterface {
         this._pool = pool;
         this.job = null;
         this._worker = null;
-        this._result = null;
+        this._timeout = null;
     }
 
     run(job: Job) {
@@ -38,6 +39,7 @@ export class JobWorker implements WorkerInterface {
 
             const scriptUrl = this.prepare(job.script);
             this._worker = new Worker(scriptUrl);
+            this._timeout = setTimeout(this.killAfterTimeout(), this._defaultTimeout);
             this._worker.onmessage = this.createResultCallback();
             this._worker.onerror = this.createErrorCallback();
         }
@@ -49,6 +51,16 @@ export class JobWorker implements WorkerInterface {
         const blob = WorkerScriptBuilder(script);
         const url = GetBlobUrl(blob);
         return url
+    }
+
+    // Kill worker if it takes too much time
+    killAfterTimeout() {
+        const instance = this;
+        return () => {
+            instance._timeout ? clearTimeout(instance._timeout) : console.log("cannot clear null timeout");
+            instance.sendError("Timeout exceeded: " + Math.floor(instance._defaultTimeout/1000) + "seconds.")
+            instance.free();
+        }
     }
 
 
@@ -131,6 +143,10 @@ export class JobWorker implements WorkerInterface {
                 instance.free();
             }
         }
+    }
+
+    checkInterval() {
+
     }
 
 }
